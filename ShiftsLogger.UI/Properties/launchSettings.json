@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "ShiftsLogger.UI": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Damian\\source\\repos\\ShiftsLogger\\ShiftsLogger.UI"
+    }
+  }
+}
