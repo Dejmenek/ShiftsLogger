@@ -8,6 +8,7 @@ public class CachingEmployeesRepository : IEmployeesRepository
 {
     private readonly IEmployeesRepository _repository;
     private readonly IMemoryCache _cache;
+    private const string EmployeesKey = "employees";
 
     public CachingEmployeesRepository(IEmployeesRepository repository, IMemoryCache cache)
     {
@@ -30,9 +31,16 @@ public class CachingEmployeesRepository : IEmployeesRepository
         return await _repository.EmployeeExists(employeeId);
     }
 
-    public Task<List<EmployeeReadDTO>> GetEmployeesAsync()
+    public async Task<List<EmployeeReadDTO>> GetEmployeesAsync()
     {
-        throw new NotImplementedException();
+        return await _cache.GetOrCreateAsync(
+            EmployeesKey,
+            async entry =>
+            {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+
+                return await _repository.GetEmployeesAsync();
+            });
     }
 
     public Task<List<ShiftReadDTO>?> GetEmployeeShiftsAsync(int employeeId)
