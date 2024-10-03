@@ -36,11 +36,6 @@ public class EmployeesController : Controller
 
         var employeeShifts = await _employeesRepository.GetEmployeeShiftsAsync(employeeId);
 
-        if (employeeShifts is null)
-        {
-            return NotFound();
-        }
-
         return Ok(employeeShifts);
     }
 
