@@ -43,9 +43,18 @@ public class CachingEmployeesRepository : IEmployeesRepository
             });
     }
 
-    public Task<List<ShiftReadDTO>?> GetEmployeeShiftsAsync(int employeeId)
+    public async Task<List<ShiftReadDTO>> GetEmployeeShiftsAsync(int employeeId)
     {
-        throw new NotImplementedException();
+        string employeeShiftsKey = $"employeeShifts-{employeeId}";
+
+        return await _cache.GetOrCreateAsync(
+            employeeShiftsKey,
+            async entry =>
+            {
+                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+
+                return await _repository.GetEmployeeShiftsAsync(employeeId);
+            });
     }
 
     public async Task<int> UpdateEmployeeAsync(int employeeId, EmployeeUpdateDTO employee)
