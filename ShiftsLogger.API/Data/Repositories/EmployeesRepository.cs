@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShiftsLogger.API.Data;
 using ShiftsLogger.API.Data.Interfaces;
 using ShiftsLogger.API.Helpers;
 using ShiftsLogger.API.Models;
@@ -44,14 +43,9 @@ public class EmployeesRepository : IEmployeesRepository
         return Mapper.ToEmployeeReadDtoList(employees);
     }
 
-    public async Task<List<ShiftReadDTO>?> GetEmployeeShiftsAsync(int employeeId)
+    public async Task<List<ShiftReadDTO>> GetEmployeeShiftsAsync(int employeeId)
     {
-        var employee = await _shiftsContext.Employees.Include(e => e.Shifts).FirstOrDefaultAsync(e => e.Id == employeeId);
-
-        if (employee?.Shifts is null)
-        {
-            return null;
-        }
+        var employee = await _shiftsContext.Employees.Include(e => e.Shifts).FirstAsync(e => e.Id == employeeId);
 
         var employeeReadDto = Mapper.ToEmployeeReadDto(employee);
 
