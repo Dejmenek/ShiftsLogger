@@ -25,6 +25,9 @@ It interacts with the ShiftsLogger API.
 	- View employee's shifts
 
 ## Examples
-- View shifts
-- View employee details
-- View employee's shifts
+- View shifts  
+![image](https://github.com/user-attachments/assets/ddaa8ab2-5bda-4ef4-9e29-2374b113eaf3)
+- View employee details  
+![image](https://github.com/user-attachments/assets/4f59a62d-4e35-4c70-8556-4b49b248cacc)
+- View employee's shifts  
+![image](https://github.com/user-attachments/assets/43b9a2cb-0026-484d-beaf-1532609fe7fe)
