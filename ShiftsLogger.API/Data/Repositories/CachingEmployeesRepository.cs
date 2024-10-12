@@ -23,11 +23,20 @@ public class CachingEmployeesRepository : IEmployeesRepository
     public async Task AddEmployeeAsync(EmployeeCreateDTO employee)
     {
         await _repository.AddEmployeeAsync(employee);
+        _cache.Remove(CacheKeys.Employees.List);
     }
 
     public async Task<int> DeleteEmployeeAsync(int employeeId)
     {
-        return await _repository.DeleteEmployeeAsync(employeeId);
+        int result = await _repository.DeleteEmployeeAsync(employeeId);
+
+        if (result > 0)
+        {
+            _cache.Remove(CacheKeys.Employees.List);
+            _cache.Remove(CacheKeys.Employees.Shifts(employeeId));
+        }
+
+        return result;
     }
 
     public async Task<bool> EmployeeExists(int employeeId)
@@ -66,6 +75,10 @@ public class CachingEmployeesRepository : IEmployeesRepository
 
     public async Task<int> UpdateEmployeeAsync(int employeeId, EmployeeUpdateDTO employee)
     {
-        return await _repository.UpdateEmployeeAsync(employeeId, employee);
+        int result = await _repository.UpdateEmployeeAsync(employeeId, employee);
+
+        if (result > 0) _cache.Remove(CacheKeys.Employees.List);
+
+        return result;
     }
 }
