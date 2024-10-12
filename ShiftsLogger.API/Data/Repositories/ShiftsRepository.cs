@@ -24,7 +24,7 @@ public class ShiftsRepository : IShiftsRepository
 
     public async Task<int> DeleteShiftAsync(int shiftId)
     {
-        var shift = await _shiftsContext.Shifts.FirstOrDefaultAsync(s => s.Id == shiftId);
+        var shift = await GetShiftById(shiftId);
 
         if (shift is null)
         {
@@ -36,6 +36,8 @@ public class ShiftsRepository : IShiftsRepository
         return await _shiftsContext.SaveChangesAsync();
     }
 
+    public async Task<Shift?> GetShiftById(int shiftId) => await _shiftsContext.Shifts.FirstOrDefaultAsync(x => x.Id == shiftId);
+
     public async Task<List<ShiftReadDTO>> GetShiftsAsync()
     {
         var shifts = await _shiftsContext.Shifts.Include(s => s.Employee).Select(s => Mapper.ToShiftReadDto(s)).ToListAsync();
@@ -45,7 +47,7 @@ public class ShiftsRepository : IShiftsRepository
 
     public async Task<int> UpdateShiftAsync(int shiftId, ShiftUpdateDTO shift)
     {
-        var oldShift = await _shiftsContext.Shifts.FirstOrDefaultAsync(x => x.Id == shiftId);
+        var oldShift = await GetShiftById(shiftId);
 
         if (oldShift is null)
         {
