@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using ShiftsLogger.API.Configuration;
+using ShiftsLogger.API.Constants;
 using ShiftsLogger.API.Data.Interfaces;
 using ShiftsLogger.API.Models;
 
@@ -11,7 +12,6 @@ public class CachingEmployeesRepository : IEmployeesRepository
     private readonly IEmployeesRepository _repository;
     private readonly IMemoryCache _cache;
     private readonly CachingSettings _cachingSettings;
-    private const string EmployeesKey = "employees";
 
     public CachingEmployeesRepository(IOptions<CachingSettings> cachingSettings, IEmployeesRepository repository, IMemoryCache cache)
     {
@@ -38,7 +38,7 @@ public class CachingEmployeesRepository : IEmployeesRepository
     public async Task<List<EmployeeReadDTO>> GetEmployeesAsync()
     {
         return await _cache.GetOrCreateAsync(
-            EmployeesKey,
+            CacheKeys.Employees.List,
             async entry =>
             {
                 entry.SetAbsoluteExpiration(_cachingSettings.EmployeeDetailsExpiration.ToTimeSpan());
@@ -49,10 +49,8 @@ public class CachingEmployeesRepository : IEmployeesRepository
 
     public async Task<List<ShiftReadDTO>> GetEmployeeShiftsAsync(int employeeId)
     {
-        string employeeShiftsKey = $"employeeShifts-{employeeId}";
-
         return await _cache.GetOrCreateAsync(
-            employeeShiftsKey,
+            CacheKeys.Employees.Shifts(employeeId),
             async entry =>
             {
                 entry.SetAbsoluteExpiration(_cachingSettings.EmployeeShiftsExpiration.ToTimeSpan());
