@@ -35,6 +35,11 @@ public class CachingEmployeesRepository : IEmployeesRepository
         return await _repository.EmployeeExists(employeeId);
     }
 
+    public async Task<Employee?> GetEmployeeById(int employeeId)
+    {
+        return await _repository.GetEmployeeById(employeeId);
+    }
+
     public async Task<List<EmployeeReadDTO>> GetEmployeesAsync()
     {
         return await _cache.GetOrCreateAsync(

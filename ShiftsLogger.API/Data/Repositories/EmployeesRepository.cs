@@ -24,7 +24,7 @@ public class EmployeesRepository : IEmployeesRepository
 
     public async Task<int> DeleteEmployeeAsync(int employeeId)
     {
-        var employee = await _shiftsContext.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
+        var employee = await GetEmployeeById(employeeId);
 
         if (employee is null)
         {
@@ -54,7 +54,7 @@ public class EmployeesRepository : IEmployeesRepository
 
     public async Task<int> UpdateEmployeeAsync(int employeeId, EmployeeUpdateDTO employeeDto)
     {
-        var oldEmployee = await _shiftsContext.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
+        var oldEmployee = await GetEmployeeById(employeeId);
 
         if (oldEmployee is null)
         {
@@ -67,8 +67,7 @@ public class EmployeesRepository : IEmployeesRepository
         return await _shiftsContext.SaveChangesAsync();
     }
 
-    public async Task<bool> EmployeeExists(int employeeId)
-    {
-        return await _shiftsContext.Employees.AnyAsync(e => e.Id == employeeId);
-    }
+    public async Task<bool> EmployeeExists(int employeeId) => await _shiftsContext.Employees.AnyAsync(e => e.Id == employeeId);
+
+    public async Task<Employee?> GetEmployeeById(int employeeId) => await _shiftsContext.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
 }
